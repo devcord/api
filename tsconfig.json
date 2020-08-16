@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "declaration": false,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["server/*"],
+      "@interfaces/*": ["@interfaces/*"],
+      "@client": ["client/dist"]
+    }
+  },
+  "include": [
+    "server/*"
+  ]
+}
