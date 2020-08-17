@@ -7,6 +7,7 @@ import {
 } from '@interfaces'
 
 import AuthMiddleware from '../middleware/auth'
+import { verify } from 'jsonwebtoken'
 
 export default (props: Props): Middleware => {
   const router = new Router()
@@ -18,6 +19,10 @@ export default (props: Props): Middleware => {
 
   router.get('/redirect', ctx => {
     ctx.redirect(discord.redirect)
+  })
+
+  router.get('/get-redirect', ctx => {
+    ctx.body = discord.redirect
   })
 
   router.get('/users/:id', async ctx => {
@@ -50,7 +55,17 @@ export default (props: Props): Middleware => {
       sameSite: 'lax',
     })
 
-    ctx.body = user
+    const guildMember = await discord.getGuildMember(user.id)
+
+    const memberExists = Boolean(guildMember)
+
+    const hasVerifiedRole = memberExists ? await discord.checkUserHasVerifiedRole(guildMember) : false
+
+    ctx.body = {
+      ...user,
+      memberExists,
+      hasVerifiedRole,
+    }
   })
 
   router.get('/auth', AuthMiddleware(props), async ctx => {
@@ -60,6 +75,33 @@ export default (props: Props): Middleware => {
       userId, 
       loggedIn,
     }
+  })
+
+  router.get('/verification-status', AuthMiddleware(props), async ctx => {
+    const { userId, loggedIn } = ctx.state
+
+    if (!loggedIn) return ctx.throw(401, 'Please log in.')
+
+    const guildMember = await discord.getGuildMember(userId)
+
+    const memberExists = Boolean(guildMember)
+
+    const hasVerifiedRole = memberExists ? await discord.checkUserHasVerifiedRole(guildMember) : false
+
+    ctx.body = {
+      memberExists,
+      hasVerifiedRole,
+    }
+  })
+
+  router.get('/verify', AuthMiddleware(props), async ctx => {
+    const { userId, loggedIn } = ctx.state
+
+    if (!loggedIn) return ctx.throw(401, 'Please log in.')
+
+    await discord.verifyUser(userId)
+    
+    ctx.body = ''
   })
 
   return router.routes()

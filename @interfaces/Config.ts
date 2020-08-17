@@ -1,4 +1,5 @@
 import { DiscordConfig } from "./discord"
+import cors from '@koa/cors'
 
 export interface Config {
   database?: {
@@ -19,4 +20,6 @@ export interface Config {
   discord?: DiscordConfig
 
   isDevelopment?: boolean
+
+  cors?: cors
 }

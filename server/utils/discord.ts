@@ -1,5 +1,6 @@
 import fetch from './fetch'
 import querystring from 'querystring'
+import DiscordJS from 'discord.js'
 
 import {
   AxiosRequestConfig,
@@ -36,11 +37,17 @@ const apiRequest = async (
   }
 }
 
+const bot = new DiscordJS.Client()
+
+let guild
+
 export default ({
   botToken, 
   clientId, 
   clientSecret, 
   redirectUri, 
+  guildId,
+  verifiedRole,
   scope,
 }: DiscordConfig): Discord => {
   const Bearer = (token: string): string => `Bearer ${token}`
@@ -141,6 +148,45 @@ export default ({
     }
   }
 
+  const getGuildMember = async(id: string): Promise<DiscordJS.GuildMember | null> => {
+    try {
+      const member: DiscordJS.GuildMember = await guild.members.fetch({ 
+        user: id, 
+        cache: false,
+      })
+
+      return member
+    } catch (error) {
+      console.error(new Error(error.message), '\n')
+
+      return null
+    }
+  }
+
+  const checkUserHasVerifiedRole = async (member: DiscordJS.GuildMember): Promise<boolean> => {
+    try {
+      return Boolean(await member.roles.cache.find(({ id }) => id === verifiedRole))
+    } catch (error) {
+      console.error(new Error(error.message), '\n')
+
+      return false 
+    }
+  }
+
+  const verifyUser = async (id: string): Promise<void> => {
+    const member: DiscordJS.GuildMember = await guild.members.fetch({ 
+      user: id, 
+      cache: false,
+    })
+
+    member.roles.add(verifiedRole)
+  }
+
+  bot.on('ready', async () => {
+    console.log(`Logged in as ${bot.user.tag}\n`)
+    guild = await bot.guilds.fetch(guildId)
+  })
+
   const redirect = `https://discordapp.com/oauth2/authorize?client_id=${
     clientId
   }&scope=${
@@ -149,11 +195,16 @@ export default ({
     redirectUri
   }&prompt=none`
 
+  bot.login(botToken)
+
   return {
     getUserById,
     getUserByToken,
+    getGuildMember,
     processCode,
     processRefresh,
+    checkUserHasVerifiedRole,
+    verifyUser,
     redirect,
   }
 }

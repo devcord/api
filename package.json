@@ -10,10 +10,12 @@
     "lint": "eslint --fix --ext .js,.vue,.ts server client/src"
   },
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "@koa/router": "^8.0.8",
     "argon2": "^0.26.2",
     "axios": "^0.19.2",
     "chalk": "^4.0.0",
+    "discord.js": "^12.3.1",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.3.0",

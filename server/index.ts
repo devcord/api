@@ -11,12 +11,15 @@ import {
   Props, 
 } from '@interfaces'
 
+
+const getDate = (): string => '[UTC] ' + new Date().toLocaleString('en-US', { timeZone: 'UTC' })
+
 const success = (...args: Array<string>): void => {
-  console.log(`${ chalk.bgGreen.black(' API ') }`, ...args, '\n')
+  console.log(`${ chalk.bgGreen.black(' API ') } ${chalk.gray(getDate())} `, ...args, '\n')
 }
 
 const failure = (...args: Array<string>): void => {
-  console.log(`${ chalk.bgRed.black(' API ') }`, ...args, '\n')
+  console.log(`${ chalk.bgRed.black(' API ') } ${chalk.gray(getDate())} `, ...args, '\n')
 }
 
 const init = async (): Promise<void> => {
