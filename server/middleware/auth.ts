@@ -27,6 +27,7 @@ export default ({ jwt, discord }: Props) => async (ctx, next): Promise<void> => 
       
       ctx.cookies.set('refreshToken', refreshToken, {
         sameSite: 'lax',
+        expires: new Date(Date.now() + 604800000 * 52), // 1 year
       })
   
       ctx.cookies.set('loggedIn', jwt.sign({ 
@@ -41,7 +42,7 @@ export default ({ jwt, discord }: Props) => async (ctx, next): Promise<void> => 
     ctx.state.loggedIn = true
     ctx.state.userId = loggedIn.id
   } else {
-    if (!loggedIn) return ctx.throw(401)
+    // if (!loggedIn) return ctx.throw(401)
   }
 
   await next()

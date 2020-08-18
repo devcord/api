@@ -56,6 +56,7 @@ export default (props: Props): Middleware => {
       
       ctx.cookies.set('refreshToken', refreshToken, {
         sameSite: 'lax',
+        expires: new Date(Date.now() + 604800000 * 52), // 1 year
       })
       
       ctx.cookies.set('loggedIn', jwt.sign({ 
@@ -77,6 +78,25 @@ export default (props: Props): Middleware => {
         hasVerifiedRole,
       }
     }
+  })
+
+  router.get('/logout', async ctx => {
+    ctx.cookies.set('accessToken', '', {
+      expires: new Date(),
+      sameSite: 'lax',
+    })
+    
+    ctx.cookies.set('refreshToken', '', {
+      expires: new Date(),
+      sameSite: 'lax',
+    })
+    
+    ctx.cookies.set('loggedIn', '', {
+      expires: new Date(),
+      sameSite: 'lax',
+    })
+
+    ctx.body = ''
   })
 
   router.get('/auth', AuthMiddleware(props), async ctx => {
