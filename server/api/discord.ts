@@ -7,7 +7,6 @@ import {
 } from '@interfaces'
 
 import AuthMiddleware from '../middleware/auth'
-import { verify } from 'jsonwebtoken'
 
 export default (props: Props): Middleware => {
   const router = new Router()
@@ -31,40 +30,52 @@ export default (props: Props): Middleware => {
       : await discord.getUserById(ctx.params.id)
   })
 
-  router.get('/process-code', async ctx => {
+  router.get('/process-code', AuthMiddleware(props), async ctx => {
     const { code } = ctx.query
-
-    if (!code) return ctx.throw(400, 'Please provide a code parameter.') 
-
-    const { refreshToken, accessToken, user }: DiscordToken = await discord.processCode(code)
     
-    ctx.cookies.set('accessToken', accessToken, {
-      expires: new Date(Date.now() + 604800000), // 1 week
-      sameSite: 'lax',
-    })
-    
-    ctx.cookies.set('refreshToken', refreshToken, {
-      sameSite: 'lax',
-    })
-    
-    ctx.cookies.set('loggedIn', jwt.sign({ 
-      id: user.id,
-      expires: Date.now() + 604800000,
-    }), {
-      expires: new Date(Date.now() + 604800000), // 1 week
-      sameSite: 'lax',
-    })
+    if (ctx.state.loggedIn) {
+      const guildMember = await discord.getGuildMember(ctx.state.userId)
+  
+      const memberExists = Boolean(guildMember)
+  
+      const hasVerifiedRole = memberExists ? await discord.checkUserHasVerifiedRole(guildMember) : false
+  
+      ctx.body = {
+        memberExists,
+        hasVerifiedRole,
+      }
+    } else {
+      if (!code) return ctx.throw(400, 'Please provide a code parameter.') 
+  
+      const { refreshToken, accessToken, user }: DiscordToken = await discord.processCode(code)
+      
+      ctx.cookies.set('accessToken', accessToken, {
+        expires: new Date(Date.now() + 604800000), // 1 week
+        sameSite: 'lax',
+      })
+      
+      ctx.cookies.set('refreshToken', refreshToken, {
+        sameSite: 'lax',
+      })
+      
+      ctx.cookies.set('loggedIn', jwt.sign({ 
+        id: user.id,
+        expires: Date.now() + 604800000,
+      }), {
+        expires: new Date(Date.now() + 604800000), // 1 week
+        sameSite: 'lax',
+      })
 
-    const guildMember = await discord.getGuildMember(user.id)
-
-    const memberExists = Boolean(guildMember)
-
-    const hasVerifiedRole = memberExists ? await discord.checkUserHasVerifiedRole(guildMember) : false
-
-    ctx.body = {
-      ...user,
-      memberExists,
-      hasVerifiedRole,
+      const guildMember = await discord.getGuildMember(user.id)
+  
+      const memberExists = Boolean(guildMember)
+  
+      const hasVerifiedRole = memberExists ? await discord.checkUserHasVerifiedRole(guildMember) : false
+  
+      ctx.body = {
+        memberExists,
+        hasVerifiedRole,
+      }
     }
   })
 
@@ -99,9 +110,37 @@ export default (props: Props): Middleware => {
 
     if (!loggedIn) return ctx.throw(401, 'Please log in.')
 
-    await discord.verifyUser(userId)
+    const guildMember = await discord.getGuildMember(userId)
+
+    const memberExists = Boolean(guildMember)
+
+    if (memberExists) await discord.verifyMember(guildMember)
     
-    ctx.body = ''
+    ctx.body = {
+      memberExists,
+    }
+  })
+
+  router.get('/staff', async ctx => {
+    const members = await discord.getStaff()
+
+    const users = members.map(({ user }) => user)
+
+    ctx.body = users.map(({ 
+      id, 
+      username, 
+      discriminator, 
+      avatar, 
+    }) => {
+      return {
+        id,
+        username,
+        discriminator,
+        tag: `${username}#${discriminator}`,
+        avatar,
+        avatarUrl: avatar ? discord.getAvatar(id, avatar) : discord.getDefaultAvatar(Number(discriminator)),
+      }
+    })
   })
 
   return router.routes()

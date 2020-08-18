@@ -6,4 +6,5 @@ export interface DiscordConfig {
   clientSecret: string
   verifiedRole: string
   guildId: string
+  staffRole: string
 }

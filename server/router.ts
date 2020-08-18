@@ -38,7 +38,7 @@ export default (props: Props): void => {
 
   app.on('error', error => failure(error))
 
-  router.use('', api(props))
+  router.use('/api', api(props))
 
   app.use(router.routes())
 

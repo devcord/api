@@ -48,6 +48,7 @@ export default ({
   redirectUri, 
   guildId,
   verifiedRole,
+  staffRole,
   scope,
 }: DiscordConfig): Discord => {
   const Bearer = (token: string): string => `Bearer ${token}`
@@ -173,13 +174,14 @@ export default ({
     }
   }
 
-  const verifyUser = async (id: string): Promise<void> => {
-    const member: DiscordJS.GuildMember = await guild.members.fetch({ 
-      user: id, 
-      cache: false,
-    })
+  const verifyMember = async (member: DiscordJS.GuildMember): Promise<void> => {
+    await member.roles.add(verifiedRole)
+  }
 
-    member.roles.add(verifiedRole)
+  const getStaff = async (): Promise<DiscordJS.GuildMember[]> => {
+    const { members } = await guild.roles.fetch(staffRole)
+
+    return members
   }
 
   bot.on('ready', async () => {
@@ -198,13 +200,16 @@ export default ({
   bot.login(botToken)
 
   return {
+    getAvatar,
+    getDefaultAvatar,
     getUserById,
     getUserByToken,
     getGuildMember,
     processCode,
     processRefresh,
     checkUserHasVerifiedRole,
-    verifyUser,
+    verifyMember,
+    getStaff,
     redirect,
   }
 }
