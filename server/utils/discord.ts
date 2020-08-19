@@ -187,6 +187,8 @@ export default ({
     return members.array()
   }
 
+  let prevCount, newCount
+
   const setMemberCount = async (count: number): Promise<void> => {
     try {
       // fixes discord.js bug
@@ -207,14 +209,26 @@ export default ({
     memberCountChannel = guild.channels.resolve(memberCountChannelId)
 
     await setMemberCount(guild.memberCount)
+
+    prevCount = guild.memberCount
+    newCount = guild.memberCount
+
+    setInterval(() => {
+      if (prevCount !== newCount) {
+        prevCount = newCount
+        setMemberCount(newCount)
+      }
+    }, 10000)
   })
 
   bot.on('guildMemberAdd', async ({ guild }) => {
-    await setMemberCount(guild.memberCount)
+    // await setMemberCount(guild.memberCount)
+    newCount = guild.memberCount
   })
 
   bot.on('guildMemberRemove', async ({ guild }) => {
-    await setMemberCount(guild.memberCount)
+    // await setMemberCount(guild.memberCount)
+    newCount = guild.memberCount
   })
 
   const redirect = `https://discordapp.com/oauth2/authorize?client_id=${
