@@ -4,7 +4,7 @@ export interface DiscordConfig {
   botToken: string
   clientId: string
   clientSecret: string
-  verifiedRole: string
+  verifiedRoleId: string
   guildId: string
   staffRoleId: string
   memberCountChannelId: string
