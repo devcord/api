@@ -218,7 +218,7 @@ export default ({
         prevCount = newCount
         setMemberCount(newCount)
       }
-    }, 10000)
+    }, 1000 * 60)
   })
 
   bot.on('guildMemberAdd', async ({ guild }) => {
