@@ -47,7 +47,7 @@ export default ({
   clientSecret, 
   redirectUri, 
   guildId,
-  verifiedRole,
+  verifiedRoleId,
   staffRoleId,
   memberCountChannelId,
   memberCountMessage,
@@ -169,7 +169,7 @@ export default ({
 
   const checkUserHasVerifiedRole = async (member: DiscordJS.GuildMember): Promise<boolean> => {
     try {
-      return Boolean(await member.roles.cache.find(({ id }) => id === verifiedRole))
+      return Boolean(await member.roles.cache.find(({ id }) => id === verifiedRoleId))
     } catch (error) {
       console.error(new Error(error.message), '\n')
 
@@ -178,7 +178,7 @@ export default ({
   }
 
   const verifyMember = async (member: DiscordJS.GuildMember): Promise<void> => {
-    await member.roles.add(verifiedRole)
+    await member.roles.add(verifiedRoleId)
   }
 
   const getStaff = async (): Promise<DiscordJS.GuildMember[]> => {
