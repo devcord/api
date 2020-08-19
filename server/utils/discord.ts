@@ -39,7 +39,7 @@ const apiRequest = async (
 
 const bot = new DiscordJS.Client()
 
-let guild
+let guild: DiscordJS.Guild, memberCountChannel: DiscordJS.GuildChannel
 
 export default ({
   botToken, 
@@ -48,7 +48,10 @@ export default ({
   redirectUri, 
   guildId,
   verifiedRole,
-  staffRole,
+  staffRoleId,
+  memberCountChannelId,
+  memberCountMessage,
+  memberCountEnabled,
   scope,
 }: DiscordConfig): Discord => {
   const Bearer = (token: string): string => `Bearer ${token}`
@@ -179,14 +182,39 @@ export default ({
   }
 
   const getStaff = async (): Promise<DiscordJS.GuildMember[]> => {
-    const { members } = await guild.roles.fetch(staffRole)
+    const { members } = await guild.roles.fetch(staffRoleId)
 
-    return members
+    return members.array()
+  }
+
+  const setMemberCount = async (count: number): Promise<void> => {
+    try {
+      // fixes discord.js bug
+      
+      if (memberCountEnabled) await memberCountChannel.edit({ 
+        name: memberCountMessage.replace('{{ x }}', String(count)),
+        bitrate: 8000,
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   bot.on('ready', async () => {
     console.log(`Logged in as ${bot.user.tag}\n`)
     guild = await bot.guilds.fetch(guildId)
+
+    memberCountChannel = guild.channels.resolve(memberCountChannelId)
+
+    await setMemberCount(guild.memberCount)
+  })
+
+  bot.on('guildMemberAdd', async ({ guild }) => {
+    await setMemberCount(guild.memberCount)
+  })
+
+  bot.on('guildMemberRemove', async ({ guild }) => {
+    await setMemberCount(guild.memberCount)
   })
 
   const redirect = `https://discordapp.com/oauth2/authorize?client_id=${

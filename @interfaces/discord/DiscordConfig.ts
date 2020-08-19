@@ -6,5 +6,8 @@ export interface DiscordConfig {
   clientSecret: string
   verifiedRole: string
   guildId: string
-  staffRole: string
+  staffRoleId: string
+  memberCountChannelId: string
+  memberCountMessage: string
+  memberCountEnabled: boolean
 }
