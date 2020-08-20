@@ -1,4 +1,6 @@
 # Devcord API
+Frontend repository available at https://github.com/devcord/website
+
 ## prerequisites
 - node.js 12+
 
