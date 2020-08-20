@@ -6,14 +6,14 @@ const validGetUser = (params): boolean => {
 
 const validUserDays = (params): boolean => {
   if (!Object.keys(params).includes('days')) return false
-  if (typeof params.days !== 'number') return false
+  if (typeof params.days !== 'string') return false
 
   return true
 }
 
 const validTopDays = (params): boolean => {
   if (!Object.keys(params).includes('days')) return false
-  if (typeof params.days !== 'number') return false
+  if (typeof params.days !== 'string') return false
 
   return true
 }
