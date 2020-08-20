@@ -48,7 +48,9 @@ export default (props: Props): Middleware => {
       reduce: "function (_, values) { return Array.sum(values) }",
 
       query: {
-        createdAt: { $gte: date.toISOString() },
+        createdAt: { 
+          $gte: date.toISOString(),
+        },
       },
 
       resolveToObject: true,
