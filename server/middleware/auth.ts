@@ -1,4 +1,4 @@
-import { Props } from '@interfaces'
+import { Props } from '@types'
 
 export default ({ jwt, discord }: Props) => async (ctx, next): Promise<void> => {
   const token = ctx.cookies.get('loggedIn')

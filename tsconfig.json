@@ -7,7 +7,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["server/*"],
-      "@interfaces/*": ["@interfaces/*"],
+      "@types/*": ["@types/*"],
       "@client": ["client/dist"]
     }
   },

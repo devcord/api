@@ -3,7 +3,7 @@ import DiscordJS from 'discord.js'
 import {
   DiscordConfig,
   Discord,
-} from '@interfaces'
+} from '@types'
 
 let guild: DiscordJS.Guild 
 let memberCountChannel: DiscordJS.GuildChannel
@@ -91,12 +91,10 @@ export default (config: DiscordConfig): Discord => {
   })
 
   bot.on('guildMemberAdd', async ({ guild }) => {
-    // await setMemberCount(guild.memberCount)
     newCount = guild.memberCount
   })
 
   bot.on('guildMemberRemove', async ({ guild }) => {
-    // await setMemberCount(guild.memberCount)
     newCount = guild.memberCount
   })
 

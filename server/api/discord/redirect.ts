@@ -3,7 +3,7 @@ import Router from 'koa-router'
 
 import {
   Props,
-} from '@interfaces'
+} from '@types'
 
 export default (props: Props): Middleware => {
   const router = new Router()

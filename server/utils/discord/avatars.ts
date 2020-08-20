@@ -1,6 +1,6 @@
 import {
   Discord,
-} from '@interfaces'
+} from '@types'
 
 export default (): Discord => {
   const getAvatar = (id: string, avatar: string): string => (

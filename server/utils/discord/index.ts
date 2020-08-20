@@ -1,7 +1,7 @@
 import {
   DiscordConfig,
   Discord,
-} from '@interfaces'
+} from '@types'
 
 import Avatars from './avatars'
 import Users from './users'

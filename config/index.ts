@@ -1,6 +1,6 @@
 import {
   Config,
-} from '../@interfaces'
+} from '../@types'
 
 import CustomConfig from './custom'
 

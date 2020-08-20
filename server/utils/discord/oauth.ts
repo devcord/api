@@ -6,7 +6,7 @@ import {
   DiscordToken,
   DiscordConfig,
   Discord,
-} from '@interfaces'
+} from '@types'
 
 export default (config: DiscordConfig, { getUserByToken }: Discord): Discord => {
   const {

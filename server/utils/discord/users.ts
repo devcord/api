@@ -2,7 +2,7 @@ import {
   Discord,
   DiscordConfig,
   DiscordUser,
-} from '@interfaces'
+} from '@types'
 
 import { apiRequest } from './request'
 

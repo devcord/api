@@ -3,7 +3,7 @@ import Router from 'koa-router'
 
 import {
   Props,
-} from '@interfaces'
+} from '@types'
 
 import Redirect from './redirect'
 import Verify from './verify'

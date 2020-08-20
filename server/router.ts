@@ -6,7 +6,7 @@ import cors from '@koa/cors'
 
 import api from './api'
 
-import { Props } from '@interfaces'
+import { Props } from '@types'
 
 export default (props: Props): void => {
   const app = new koa()

@@ -4,7 +4,7 @@ import Router from 'koa-router'
 import {
   Props,
   DiscordToken,
-} from '@interfaces'
+} from '@types'
 
 import AuthMiddleware from '../../middleware/auth'
 
