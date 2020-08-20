@@ -12,9 +12,9 @@ export default async (
 
     return data
   } catch ({ response }) {
-    const { 
-      status, 
-      data, 
+    const {
+      status,
+      data,
       config: { url },
     }: {
       status: number
@@ -24,10 +24,10 @@ export default async (
       }
     } = response
 
-    throw { 
-      status, 
-      data, 
-      url, 
+    throw {
+      status,
+      data,
+      url,
     }
   }
 }

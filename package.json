@@ -7,7 +7,8 @@
     "start": "node dist/server",
     "dev": "cross-env NODE_ENV=development ts-node-dev server",
     "build": "cross-env NODE_ENV=production tsc",
-    "lint": "eslint --fix --ext .ts server @interfaces config"
+    "lint": "eslint --fix --ext .ts server @interfaces config",
+    "prettier": "prettier -c server @interfaces config"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

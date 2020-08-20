@@ -13,7 +13,7 @@ export default (props: Props): void => {
   const router = new Router()
 
   const {
-    config, 
+    config,
     success,
     failure,
   } = props
@@ -27,7 +27,7 @@ export default (props: Props): void => {
 
   app.use(async (ctx, next) => {
     await next()
-    
+
     const { request, body } = ctx
 
     console.log(getDate(), {
@@ -43,6 +43,6 @@ export default (props: Props): void => {
   app.use(router.routes())
 
   app.listen(config.port)
-  
+
   success(`Running on port ${config.port}.`)
 }

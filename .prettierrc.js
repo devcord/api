@@ -1,5 +1,5 @@
 module.exports = {
-  parser: "babel",
+  parser: "typescript",
   semi: false,
   useTabs: false,
   tabWidth: 2,

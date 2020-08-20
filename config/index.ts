@@ -1,5 +1,5 @@
 import {
-  Config, 
+  Config,
 } from '../@interfaces'
 
 import CustomConfig from './custom'

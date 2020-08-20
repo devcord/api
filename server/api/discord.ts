@@ -11,7 +11,7 @@ import AuthMiddleware from '../middleware/auth'
 export default (props: Props): Middleware => {
   const router = new Router()
 
-  const { 
+  const {
     discord,
     jwt,
   } = props
@@ -25,41 +25,41 @@ export default (props: Props): Middleware => {
   })
 
   router.get('/users/:id', async ctx => {
-    ctx.body = ctx.params.id === '@me' 
+    ctx.body = ctx.params.id === '@me'
       ? await discord.getUserByToken(ctx.cookies.get('accessToken'))
       : await discord.getUserById(ctx.params.id)
   })
 
   router.get('/process-code', AuthMiddleware(props), async ctx => {
     const { code } = ctx.query
-    
+
     if (ctx.state.loggedIn) {
       const guildMember = await discord.getGuildMember(ctx.state.userId)
-  
+
       const memberExists = Boolean(guildMember)
-  
+
       const hasVerifiedRole = memberExists ? await discord.checkUserHasVerifiedRole(guildMember) : false
-  
+
       ctx.body = {
         memberExists,
         hasVerifiedRole,
       }
     } else {
-      if (!code) return ctx.throw(400, 'Please provide a code parameter.') 
-  
+      if (!code) return ctx.throw(400, 'Please provide a code parameter.')
+
       const { refreshToken, accessToken, user }: DiscordToken = await discord.processCode(code)
-      
+
       ctx.cookies.set('accessToken', accessToken, {
         expires: new Date(Date.now() + 604800000), // 1 week
         sameSite: 'lax',
       })
-      
+
       ctx.cookies.set('refreshToken', refreshToken, {
         sameSite: 'lax',
         expires: new Date(Date.now() + 604800000 * 52), // 1 year
       })
-      
-      ctx.cookies.set('loggedIn', jwt.sign({ 
+
+      ctx.cookies.set('loggedIn', jwt.sign({
         id: user.id,
         expires: Date.now() + 604800000,
       }), {
@@ -68,11 +68,11 @@ export default (props: Props): Middleware => {
       })
 
       const guildMember = await discord.getGuildMember(user.id)
-  
+
       const memberExists = Boolean(guildMember)
-  
+
       const hasVerifiedRole = memberExists ? await discord.checkUserHasVerifiedRole(guildMember) : false
-  
+
       ctx.body = {
         memberExists,
         hasVerifiedRole,
@@ -85,12 +85,12 @@ export default (props: Props): Middleware => {
       expires: new Date(),
       sameSite: 'lax',
     })
-    
+
     ctx.cookies.set('refreshToken', '', {
       expires: new Date(),
       sameSite: 'lax',
     })
-    
+
     ctx.cookies.set('loggedIn', '', {
       expires: new Date(),
       sameSite: 'lax',
@@ -102,8 +102,8 @@ export default (props: Props): Middleware => {
   router.get('/auth', AuthMiddleware(props), async ctx => {
     const { userId, loggedIn } = ctx.state
 
-    ctx.body = { 
-      userId, 
+    ctx.body = {
+      userId,
       loggedIn,
     }
   })
@@ -135,7 +135,7 @@ export default (props: Props): Middleware => {
     const memberExists = Boolean(guildMember)
 
     if (memberExists) await discord.verifyMember(guildMember)
-    
+
     ctx.body = {
       memberExists,
     }
@@ -146,11 +146,11 @@ export default (props: Props): Middleware => {
 
     const users = members.map(({ user }) => user)
 
-    ctx.body = users.map(({ 
-      id, 
-      username, 
-      discriminator, 
-      avatar, 
+    ctx.body = users.map(({
+      id,
+      username,
+      discriminator,
+      avatar,
     }) => {
       return {
         id,

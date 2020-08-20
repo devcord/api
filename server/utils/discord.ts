@@ -22,18 +22,18 @@ const apiRequest = async (
   try {
     return await fetch(`https://discordapp.com/api${path}`, {
       ...options,
-      headers: { 
+      headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         ...options.headers,
       },
     }) as object
   } catch ({ data, status, url }) {
     const {
-      message, 
-      error_description: error, 
+      message,
+      error_description: error,
     } = data
 
-    throw new Error(`${status} at ${url} | ${ message || error || JSON.stringify(data) }`)
+    throw new Error(`${status} at ${url} | ${message || error || JSON.stringify(data)}`)
   }
 }
 
@@ -42,10 +42,10 @@ const bot = new DiscordJS.Client()
 let guild: DiscordJS.Guild, memberCountChannel: DiscordJS.GuildChannel
 
 export default ({
-  botToken, 
-  clientId, 
-  clientSecret, 
-  redirectUri, 
+  botToken,
+  clientId,
+  clientSecret,
+  redirectUri,
   guildId,
   verifiedRoleId,
   staffRoleId,
@@ -66,14 +66,14 @@ export default ({
   )
 
   const getUserById = async (id: string): Promise<DiscordUser> => {
-    const data = await apiRequest(`/users/${ id }`, {
+    const data = await apiRequest(`/users/${id}`, {
       headers: {
         authorization: Bot(),
       },
     }) as DiscordUser
 
-    const { 
-      avatar, 
+    const {
+      avatar,
       discriminator,
     } = data
 
@@ -90,9 +90,9 @@ export default ({
       },
     }) as DiscordUser
 
-    const { 
-      id, 
-      avatar, 
+    const {
+      id,
+      avatar,
       discriminator,
     } = data
 
@@ -101,12 +101,12 @@ export default ({
       avatarUrl: data.avatar ? getAvatar(id, avatar) : getDefaultAvatar(discriminator),
     } as DiscordUser
   }
-  
+
   const processCode = async (code: string): Promise<DiscordToken> => {
-    const { 
-      access_token: accessToken, 
+    const {
+      access_token: accessToken,
       refresh_token: refreshToken,
-    } = await apiRequest(`/oauth2/token`, { 
+    } = await apiRequest(`/oauth2/token`, {
       method: 'POST',
       data: querystring.stringify({
         'client_id': clientId,
@@ -119,7 +119,7 @@ export default ({
     }) as { access_token: string, refresh_token: string }
 
     const user = await getUserByToken(accessToken)
-  
+
     return {
       accessToken,
       refreshToken,
@@ -128,10 +128,10 @@ export default ({
   }
 
   const processRefresh = async (refreshToken: string): Promise<DiscordToken> => {
-    const { 
+    const {
       access_token: accessToken,
       refresh_token: newRefreshToken,
-    } = await apiRequest(`/oauth2/token`, { 
+    } = await apiRequest(`/oauth2/token`, {
       method: 'POST',
       data: querystring.stringify({
         'client_id': clientId,
@@ -144,7 +144,7 @@ export default ({
     }) as { access_token: string, refresh_token: string }
 
     // const user = await getUserByToken(accessToken)
-  
+
     return {
       accessToken,
       refreshToken: newRefreshToken,
@@ -152,10 +152,10 @@ export default ({
     }
   }
 
-  const getGuildMember = async(id: string): Promise<DiscordJS.GuildMember | null> => {
+  const getGuildMember = async (id: string): Promise<DiscordJS.GuildMember | null> => {
     try {
-      const member: DiscordJS.GuildMember = await guild.members.fetch({ 
-        user: id, 
+      const member: DiscordJS.GuildMember = await guild.members.fetch({
+        user: id,
         cache: false,
       })
 
@@ -173,7 +173,7 @@ export default ({
     } catch (error) {
       console.error(new Error(error.message), '\n')
 
-      return false 
+      return false
     }
   }
 
@@ -192,8 +192,8 @@ export default ({
   const setMemberCount = async (count: number): Promise<void> => {
     try {
       // fixes discord.js bug
-      
-      if (memberCountEnabled) await memberCountChannel.edit({ 
+
+      if (memberCountEnabled) await memberCountChannel.edit({
         name: memberCountMessage.replace('{{ x }}', String(count)),
         bitrate: 8000,
       })

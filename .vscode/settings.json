@@ -1,4 +1,9 @@
 {
   "editor.tabSize": 2,
-  "eslint.validate": ["typescript"]
+  "eslint.validate": [
+    "typescript"
+  ],
+  "cSpell.words": [
+    "bodyparser"
+  ]
 }
