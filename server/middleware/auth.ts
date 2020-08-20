@@ -19,18 +19,18 @@ export default ({ jwt, discord }: Props) => async (ctx, next): Promise<void> => 
   if (loggedIn) {
     if (loggedIn.expires <= Date.now()) {
       const { refreshToken, accessToken } = await discord.processRefresh(ctx.cookies.get('refreshToken'))
-      
+
       ctx.cookies.set('accessToken', accessToken, {
         expires: new Date(Date.now() + 604800000), // 1 week
         sameSite: 'lax',
       })
-      
+
       ctx.cookies.set('refreshToken', refreshToken, {
         sameSite: 'lax',
         expires: new Date(Date.now() + 604800000 * 52), // 1 year
       })
-  
-      ctx.cookies.set('loggedIn', jwt.sign({ 
+
+      ctx.cookies.set('loggedIn', jwt.sign({
         id: loggedIn.id,
         expires: Date.now() + 604800000,
       }), {
@@ -38,7 +38,7 @@ export default ({ jwt, discord }: Props) => async (ctx, next): Promise<void> => 
         sameSite: 'lax',
       })
     }
-  
+
     ctx.state.loggedIn = true
     ctx.state.userId = loggedIn.id
   } else {

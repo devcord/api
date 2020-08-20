@@ -7,7 +7,8 @@
     "start": "node dist/server",
     "dev": "cross-env NODE_ENV=development ts-node-dev server",
     "build": "cross-env NODE_ENV=production tsc",
-    "lint": "eslint --fix --ext .js,.vue,.ts server client/src"
+    "lint": "eslint --fix --ext .ts server @interfaces config",
+    "prettier": "prettier -c server @interfaces config"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",
@@ -32,11 +33,15 @@
     "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-router": "^7.4.0",
     "@types/mongodb": "^3.5.25",
-    "@typescript-eslint/eslint-plugin": "^2.26.0",
-    "@typescript-eslint/parser": "^2.26.0",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.2",
     "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5",
     "ts-loader": "^7.0.1",
     "ts-node-dev": "^1.0.0-pre.44"
   }

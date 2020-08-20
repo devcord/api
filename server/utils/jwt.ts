@@ -17,12 +17,12 @@ if (fs.existsSync(credentialsPath)) {
 
     publicKeyEncoding: {
       type: 'pkcs1',
-      format: 'pem', 
+      format: 'pem',
     },
 
     privateKeyEncoding: {
       type: 'pkcs1',
-      format: 'pem', 
+      format: 'pem',
     },
   })
 
