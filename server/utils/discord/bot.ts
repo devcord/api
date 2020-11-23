@@ -87,7 +87,7 @@ export default (config: DiscordConfig): Discord => {
         prevCount = newCount
         setMemberCount(newCount)
       }
-    }, 1000 * 60)
+    }, 1000 * 60 * 60)
   })
 
   bot.on('guildMemberAdd', async ({ guild }) => {
