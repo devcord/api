@@ -17,7 +17,7 @@ export default (props: Props): Middleware => {
   router.get('/staff', async ctx => {
     const members: GuildMember[] = await discord.getStaff()
 
-    const users = members.map(({ user }) => user).sort((a, b) => Number(a.discriminator) - Number(b.discriminator))
+    const users = members.map(({ user }) => user)
 
     ctx.body = users.map(({
       id,
