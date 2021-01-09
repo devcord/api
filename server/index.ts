@@ -31,7 +31,7 @@ const init = async (): Promise<void> => {
     useUnifiedTopology: true,
   })
   
-  success('Connected to MongoDB')
+  // success('Connected to MongoDB')
   // const db = dbClient.db(config.database.name)
 
   const props: Props = {

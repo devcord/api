@@ -5,23 +5,25 @@ import {
   Props,
 } from '@types'
 
+import { GuildMember } from 'discord.js'
+
 export default (props: Props): Middleware => {
   const router = new Router()
 
-  const { 
+  const {
     discord,
   } = props
 
   router.get('/staff', async ctx => {
-    const members = await discord.getStaff()
+    const members: GuildMember[] = await discord.getStaff()
 
-    const users = members.map(({ user }) => user)
+    const users = members.map(({ user }) => user).sort((a, b) => Number(a.discriminator) - Number(b.discriminator))
 
-    ctx.body = users.map(({ 
-      id, 
-      username, 
-      discriminator, 
-      avatar, 
+    ctx.body = users.map(({
+      id,
+      username,
+      discriminator,
+      avatar,
     }) => {
       return {
         id,
@@ -33,6 +35,6 @@ export default (props: Props): Middleware => {
       }
     })
   })
-  
+
   return router.routes()
 }
