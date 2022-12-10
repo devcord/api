@@ -6,6 +6,7 @@ export interface Discord {
   getUserById?(id: string): Promise<DiscordUser>
   getUserByToken?(token: string): Promise<DiscordUser>
   getGuildMember?(id: string): Promise<GuildMember>
+  getMemberCount?(): Promise<number>
   getStaff?(): Promise<GuildMember[]>
   getAvatar?(id: string, avatar: string): string
   getDefaultAvatar?(discriminator: number): string

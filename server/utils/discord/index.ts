@@ -34,6 +34,7 @@ export default (config: DiscordConfig): Discord => {
     getGuildMember, 
     checkUserHasVerifiedRole, 
     verifyMember, 
+    getMemberCount,
     getStaff,
   } = Bot(config)
 
@@ -49,6 +50,7 @@ export default (config: DiscordConfig): Discord => {
     redirect,
 
     getGuildMember,
+    getMemberCount,
     checkUserHasVerifiedRole,
     verifyMember,
     getStaff,

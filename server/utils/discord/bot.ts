@@ -5,7 +5,7 @@ import {
   Discord,
 } from '@types'
 
-let guild: DiscordJS.Guild 
+let guild: DiscordJS.Guild
 let memberCountChannel: DiscordJS.GuildChannel
 let prevCount
 let newCount
@@ -23,10 +23,10 @@ export default (config: DiscordConfig): Discord => {
     botToken,
   } = config
 
-  const getGuildMember = async(id: string): Promise<DiscordJS.GuildMember | null> => {
+  const getGuildMember = async (id: string): Promise<DiscordJS.GuildMember | null> => {
     try {
-      const member: DiscordJS.GuildMember = await guild.members.fetch({ 
-        user: id, 
+      const member: DiscordJS.GuildMember = await guild.members.fetch({
+        user: id,
         cache: false,
       })
 
@@ -38,13 +38,19 @@ export default (config: DiscordConfig): Discord => {
     }
   }
 
+  const getMemberCount = async (): Promise<number> => {
+    const approxMembers = await guild.memberCount
+
+    return approxMembers
+  }
+
   const checkUserHasVerifiedRole = async (member: DiscordJS.GuildMember): Promise<boolean> => {
     try {
       return Boolean(await member.roles.cache.find(({ id }) => id === verifiedRoleId))
     } catch (error) {
       console.error(new Error(error.message), '\n')
 
-      return false 
+      return false
     }
   }
 
@@ -53,16 +59,22 @@ export default (config: DiscordConfig): Discord => {
   }
 
   const getStaff = async (): Promise<DiscordJS.GuildMember[]> => {
-    const { members } = await guild.roles.fetch(staffRoleId)
+    try {
+      const { members } = await guild.roles.cache.get(staffRoleId)
 
-    return members.array()
+      return members.array()
+    } catch (error) {
+      console.error(error)
+
+      return []
+    }
   }
 
   const setMemberCount = async (count: number): Promise<void> => {
     try {
       // fixes discord.js bug
-      
-      if (memberCountEnabled) await memberCountChannel.edit({ 
+
+      if (memberCountEnabled && memberCountChannel !== null) await memberCountChannel.edit({
         name: memberCountMessage.replace('{{ x }}', String(count)),
         bitrate: 8000,
       })
@@ -100,10 +112,11 @@ export default (config: DiscordConfig): Discord => {
 
   bot.login(botToken)
 
-  return { 
-    getGuildMember, 
-    checkUserHasVerifiedRole, 
-    verifyMember, 
+  return {
+    getGuildMember,
+    getMemberCount,
+    checkUserHasVerifiedRole,
+    verifyMember,
     getStaff,
   }
 }

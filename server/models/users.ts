@@ -1,10 +1,5 @@
 import MONGOOSE from 'mongoose'
 
-// import PointModel, {
-//   PointDocument, 
-//   PointType, 
-// } from "./point"
-
 type toNormalizationFunction = () => UserType;
 
 export type UserDocument = MONGOOSE.Document & {

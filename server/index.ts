@@ -24,21 +24,17 @@ const failure = (...args: Array<string>): void => {
 }
 
 const init = async (): Promise<void> => {
-  // const dbClient = await MongoClient.connect(config.database.url, { useUnifiedTopology: true })
   
   await mongoose.connect(config.database.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   
-  // success('Connected to MongoDB')
-  // const db = dbClient.db(config.database.name)
 
   const props: Props = {
     config,
     success,
     failure,
-    // db,
     jwt,
     discord: discord(config.discord),
   }

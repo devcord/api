@@ -60,6 +60,7 @@ export default (props: Props): Middleware => {
       }
     } else {
       if (!code) return ctx.throw(400, 'Please provide a code parameter.')
+      if(Array.isArray(code)) return ctx.throw(400, 'Code must be a string.')
 
       const { refreshToken, accessToken, user }: DiscordToken = await discord.processCode(code)
 
